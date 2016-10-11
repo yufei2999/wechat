@@ -1,6 +1,6 @@
 package com.yufei.servlet;
 
-import com.yufei.servlet.com.yufei.utils.SHA1;
+import com.yufei.utils.SHA1;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
