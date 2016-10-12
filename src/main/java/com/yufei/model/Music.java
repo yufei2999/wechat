@@ -34,6 +34,6 @@ public class Music {
     }
 
     public String toString() {
-        return "songName:" + songName + "artistName" + artistName + "url" + url;
+        return "songName:" + songName + "artistName:" + artistName + "url:" + url;
     }
 }
