@@ -32,4 +32,8 @@ public class Music {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public String toString() {
+        return "songName:" + songName + "artistName" + artistName + "url" + url;
+    }
 }

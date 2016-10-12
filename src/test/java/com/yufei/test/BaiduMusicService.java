@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -16,6 +17,8 @@ import java.util.List;
  * Created by pc on 2016-10-12.
  */
 public class BaiduMusicService {
+
+    private static final Logger logger = Logger.getLogger(BaiduMusicService.class);
 
     /**
      * 根据歌名搜索音乐
@@ -91,6 +94,7 @@ public class BaiduMusicService {
             System.out.println("音乐链接：" + item.getUrl());
             System.out.println();
         }
+        logger.info(list);
     }
 
 }

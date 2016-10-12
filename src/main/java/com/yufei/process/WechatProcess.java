@@ -4,6 +4,7 @@ package com.yufei.process;
 import com.yufei.model.Music;
 import com.yufei.model.ReceiveXml;
 import com.yufei.service.BaiduMusicService;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -14,29 +15,30 @@ import java.util.List;
  * 
  */
 public class WechatProcess {
+
+    private static final Logger logger = Logger.getLogger(WechatProcess.class);
+
     /**
-     * 解析处理xml、获取智能回复结果（通过图灵机器人api接口）
+     * 解析处理xml
      * 
-     * @param xml
-     *            接收到的微信数据
+     * @param xml 接收到的微信数据
      * @return 最终的解析结果（xml格式数据）
      */
     public String processWechatMsg(String xml) {
         /** 解析xml数据 */
         ReceiveXml xmlEntity = new ReceiveXmlProcess().getMsgEntity(xml);
 
-        /** 以文本消息为例，调用图灵机器人api接口，获取回复内容 */
+        /** 以文本消息为例，获取回复内容 */
         String result = "";
+        List<Music> list = null;
         if ("text".endsWith(xmlEntity.getMsgType())) {
-            List<Music> list = new BaiduMusicService().searchMusic(xmlEntity.getContent());
-            result = list.get(0).getUrl();
+            list = new BaiduMusicService().searchMusic(xmlEntity.getContent());
         }
+        logger.info(list);
 
-        /**
-         * 此时，如果用户输入的是“你好”，在经过上面的过程之后，result为“你也好”类似的内容
-         * 因为最终回复给微信的也是xml格式的数据，所有需要将其封装为文本类型返回消息
-         * */
-        result = new FormatXmlProcess().formatXmlAnswer(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), result);
+        if (list != null) {
+            result = new FormatXmlProcess().formatXmlMusic(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), list.get(0));
+        }
 
         return result;
     }
