@@ -14,6 +14,16 @@
         <url-pattern>/wechatVerify</url-pattern>
     </servlet-mapping>
 
+    <!-- wechat program -->
+    <servlet>
+        <servlet-name>wechat</servlet-name>
+        <servlet-class>com.yufei.servlet.WechatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>wechat</servlet-name>
+        <url-pattern>/wechat</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
