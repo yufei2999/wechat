@@ -1,6 +1,7 @@
 package com.yufei.process;
 
 import com.yufei.model.ReceiveXml;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -29,7 +30,7 @@ public class ReceiveXmlProcess {
 
         ReceiveXml msg = null;
         try {
-            if (strXml.length() <= 0 || strXml == null) {
+            if (StringUtils.isBlank(strXml)) {
                 logger.info("strXml is null");
                 return null;
             }
@@ -46,7 +47,8 @@ public class ReceiveXmlProcess {
             //利用反射机制，调用set方法  
             //获取该实体的元类型  
             Class<?> c = Class.forName("com.yufei.model.ReceiveXml");
-            msg = (ReceiveXml) c.newInstance();//创建这个实体的对象
+            //创建这个实体的对象
+            msg = (ReceiveXml) c.newInstance();
 
             while (iter.hasNext()) {
                 Element ele = (Element) iter.next();

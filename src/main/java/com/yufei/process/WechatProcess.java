@@ -4,6 +4,7 @@ package com.yufei.process;
 import com.yufei.model.Music;
 import com.yufei.model.ReceiveXml;
 import com.yufei.service.BaiduMusicService;
+import com.yufei.utils.DataTypeUtils;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -24,21 +25,29 @@ public class WechatProcess {
      * @return 最终的解析结果（xml格式数据）
      */
     public String processWechatMsg(String xml) {
-        /** 解析xml数据 */
+        // 解析xml数据
         ReceiveXml xmlEntity = new ReceiveXmlProcess().getMsgEntity(xml);
-
-        /** 以文本消息为例，获取回复内容 */
-        String result = "";
-        List<Music> list = null;
-        if ("text".endsWith(xmlEntity.getMsgType())) {
-            list = new BaiduMusicService().searchMusic(xmlEntity.getContent());
+        if (xmlEntity == null) {
+            logger.info("parse wechat data failed");
+            return null;
         }
-        logger.info(list);
-        logger.info("from:" + xmlEntity.getFromUserName());
-        logger.info("to:" + xmlEntity.getToUserName());
 
-        if (list != null) {
-            result = new FormatXmlProcess().formatXmlMusic(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), list.get(0));
+        // xml结果
+        String result = "";
+        Music music = null;
+        if ("text".endsWith(xmlEntity.getMsgType())) {
+            music = new BaiduMusicService().searchMusic(xmlEntity.getContent());
+        }
+
+        // 返回消息
+        FormatXmlProcess format = new FormatXmlProcess();
+        if (music == null) {
+            // 文本消息
+            result = format.formatXmlAnswer(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), DataTypeUtils.TEXT_MESSAGE_CONTENT);
+        } else {
+            // 音乐消息
+            logger.info("music:" + music);
+            result = format.formatXmlMusic(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), music);
         }
 
         logger.info("result:" + result);

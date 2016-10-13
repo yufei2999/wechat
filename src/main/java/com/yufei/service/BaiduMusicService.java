@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yufei.model.Music;
 import com.yufei.model.Song;
+import com.yufei.utils.DataTypeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
@@ -12,10 +14,12 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
+ * 百度音乐搜索功能类
+ *
  * Created by pc on 2016-10-12.
  */
 public class BaiduMusicService {
@@ -25,47 +29,93 @@ public class BaiduMusicService {
     /**
      * 根据歌名搜索音乐
      *
-     * @param musicTitle 音乐名称
+     * @param keyword 关键词，支持格式：
+     *                1、歌名，如：光辉岁月
+     *                2、歌名+空格+歌手，如：光辉岁月 Beyond
      * @return Music
      */
-    public List<Music> searchMusic(String musicTitle) {
+    public Music searchMusic(String keyword) {
 
         try {
-            // 百度音乐搜索地址
-            String requestUrl = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=webapp_music&method=baidu.ting.search.catalogSug&format=xml&callback=&query={TITLE}&_=1413017198449";
-            // 对歌名进URL编码
-            requestUrl = requestUrl.replace("{TITLE}", URLEncoder.encode(musicTitle,"utf-8"));
-            // 处理歌名中间的空格
-            requestUrl = requestUrl.replaceAll("\\+", "%20");
 
-            // 查询并获取返回结果
+            if (StringUtils.isBlank(keyword)) {
+                logger.info("keyword is empty");
+                return null;
+            }
+
+            // 艺术家
+            String artistName = null;
+            if (keyword.contains(" ")) {
+                artistName = keyword.split(" ")[1];
+            }
+
+            // 百度音乐搜索API 音乐列表
+            String requestUrl = DataTypeUtils.BAIDU_MUSIC_API_LIST + Calendar.getInstance().getTimeInMillis();
+            // 关键词转码
+            requestUrl = requestUrl.replace("{keyword}", URLEncoder.encode(keyword.replaceAll(" ", ""), DataTypeUtils.ENCODING_UTF8));
+
+            // 音乐列表查询
             String result = this.getInfo(requestUrl);
+            if (StringUtils.contains(result, "\"errno\":22001")) {
+                logger.info("search failed");
+                return null;
+            }
             result = result.substring(1, result.length() - 2);
-            logger.info("request result:" + result);
+            logger.info(result);
 
             // 获取歌曲信息列表
             JSONObject json = null;
             json = JSONObject.parseObject(result);
-            String song = json.getString("song");
-            List<Song> sList = JSON.parseArray(song, Song.class);
+            String songs = json.getString("song");
+            List<Song> list = JSON.parseArray(songs, Song.class);
+            if (list == null || list.isEmpty()) {
+                logger.info("result is empty");
+                return null;
+            }
 
+            // 音乐详情查询（songid）
+            String musicInfo = null;
+            // 返回具体的音乐信息
             String songInfo = null;
-            String musicResult = null;
-            String url = "http://music.baidu.com/data/music/links?songIds=";
-            List<Music> mList = new ArrayList<Music>();
-            for (Song item : sList) {
-                musicResult = this.getInfo(url + item.getSongid());
-                json = JSONObject.parseObject(musicResult);
+            // 音乐链接地址
+            String songLink = null;
+            // 返回筛选后的音乐
+            Music music = null;
+            for (Song item : list) {
+                // 根据歌曲id（songid）进行二次查询
+                musicInfo = this.getInfo(DataTypeUtils.BAIDU_MUSIC_API_DETAIL + item.getSongid());
+                json = JSONObject.parseObject(musicInfo);
+                // 结果是列表形式，取第一条（一般也只有一条）
                 songInfo = json.getJSONObject("data").getJSONArray("songList").get(0).toString();
                 logger.info("songInfo:" + songInfo);
 
-                Music m = new Music();
-                m.setSongName(item.getSongname());
-                m.setArtistName(item.getArtistname());
-                m.setUrl(JSONObject.parseObject(songInfo).getString("songLink"));
-                mList.add(m);
+                json = JSONObject.parseObject(songInfo);
+                songLink = json.getString("songLink");
+                // 优先选取艺术家相同的音乐
+                if (StringUtils.isNotBlank(artistName) && StringUtils.equals(artistName, json.getString("artistName"))) {
+                    music = new Music();
+                    music.setSongName(item.getSongname());
+                    music.setArtistName(item.getArtistname());
+                    break;
+                }
             }
-            return mList;
+
+            // 没有匹艺术家的音乐，则选列表中第一首
+            if (music == null) {
+                Song song = list.get(0);
+                music = new Music();
+                music.setSongName(song.getSongname());
+                music.setArtistName(song.getArtistname());
+            }
+
+            // 对返回的链接做处理
+            if (StringUtils.contains(songLink, "&src=")) {
+                songLink = songLink.substring(0, songLink.indexOf("&src="));
+            }
+            logger.info("songLink:" + songLink);
+
+            music.setUrl(songLink);
+            return music;
 
         } catch (Exception e) {
             logger.error("search error", e);

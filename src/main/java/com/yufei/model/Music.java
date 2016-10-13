@@ -5,8 +5,17 @@ package com.yufei.model;
  */
 public class Music {
 
+    /**
+     * 音乐名称
+     */
     private String songName;
+    /**
+     * 艺术家
+     */
     private String artistName;
+    /**
+     * 音乐链接
+     */
     private String url;
 
     public String getSongName() {
