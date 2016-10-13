@@ -1,6 +1,7 @@
 package com.yufei.servlet;
 
 import com.yufei.process.WechatProcess;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,8 @@ import java.io.*;
  * Created by pc on 2016-10-12.
  */
 public class WechatServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(WechatServlet.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -45,7 +48,7 @@ public class WechatServlet extends HttpServlet {
             os.flush();
             os.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("OutputStream write error", e);
         }
     }
 

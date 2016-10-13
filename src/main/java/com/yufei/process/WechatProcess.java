@@ -10,9 +10,8 @@ import java.util.List;
 
 /**
  * 微信xml消息处理流程逻辑类
- * 
+ *
  * @author pamchen-1
- * 
  */
 public class WechatProcess {
 
@@ -20,7 +19,7 @@ public class WechatProcess {
 
     /**
      * 解析处理xml
-     * 
+     *
      * @param xml 接收到的微信数据
      * @return 最终的解析结果（xml格式数据）
      */
@@ -35,11 +34,14 @@ public class WechatProcess {
             list = new BaiduMusicService().searchMusic(xmlEntity.getContent());
         }
         logger.info(list);
+        logger.info("from:" + xmlEntity.getFromUserName());
+        logger.info("to:" + xmlEntity.getToUserName());
 
         if (list != null) {
             result = new FormatXmlProcess().formatXmlMusic(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), list.get(0));
         }
 
+        logger.info("result:" + result);
         return result;
     }
 }

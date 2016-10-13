@@ -33,7 +33,12 @@ public class Music {
         this.url = url;
     }
 
+    @Override
     public String toString() {
-        return "songName:" + songName + "artistName:" + artistName + "url:" + url;
+        return "Music{" +
+                "songName='" + songName + '\'' +
+                ", artistName='" + artistName + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

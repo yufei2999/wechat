@@ -55,6 +55,7 @@ public class BaiduMusicService {
                 musicResult = getInfo(url + item.getSongid());
                 json = JSONObject.parseObject(musicResult);
                 songInfo = json.getJSONObject("data").getJSONArray("songList").get(0).toString();
+                System.out.println("songInfo:");
                 System.out.println(songInfo);
 
                 Music m = new Music();
