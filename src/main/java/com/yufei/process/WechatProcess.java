@@ -3,11 +3,10 @@ package com.yufei.process;
 
 import com.yufei.model.Music;
 import com.yufei.model.ReceiveXml;
-import com.yufei.service.BaiduMusicService;
+import com.yufei.service.MusicService;
+import com.yufei.service.impl.BaiduMusicServiceImpl;
 import com.yufei.utils.DataTypeUtils;
 import org.apache.log4j.Logger;
-
-import java.util.List;
 
 /**
  * 微信xml消息处理流程逻辑类
@@ -36,7 +35,8 @@ public class WechatProcess {
         String result = "";
         Music music = null;
         if ("text".endsWith(xmlEntity.getMsgType())) {
-            music = new BaiduMusicService().searchMusic(xmlEntity.getContent());
+            MusicService service = new BaiduMusicServiceImpl();
+            music = service.searchMusic(xmlEntity.getContent());
         }
 
         // 返回消息

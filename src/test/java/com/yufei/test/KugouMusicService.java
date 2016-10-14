@@ -22,7 +22,7 @@ public class KugouMusicService {
     /**
      * 根据歌名搜索音乐
      *
-     * @param keyword 关键词，支持格式：
+     * @param keyword 关键词，格式：
      *                1、歌名，如：仙剑问情
      *                2、歌名+空格+歌手，如：仙剑问情 萧人凤
      * @return Music

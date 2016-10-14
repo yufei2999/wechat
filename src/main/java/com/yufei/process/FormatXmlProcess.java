@@ -40,7 +40,7 @@ public class FormatXmlProcess {
                 "<MsgType><![CDATA[music]]></MsgType>" +
                 "<Music>" +
                 "<Title><![CDATA[$title]]></Title>" +
-                "<Description><![CDATA[DESCRIPTION]]></Description>" +
+                "<Description><![CDATA[$description]]></Description>" +
                 "<MusicUrl><![CDATA[$musicUrl]]></MusicUrl>" +
                 "<HQMusicUrl><![CDATA[$hQMusicUrl]]></HQMusicUrl>" +
                 "</Music>" +
@@ -49,6 +49,7 @@ public class FormatXmlProcess {
                 .replace("$fromUserName", from)
                 .replace("$createTime", String.valueOf(Calendar.getInstance().getTime()))
                 .replace("$title", music.getSongName())
+                .replace("$description", music.getArtistName())
                 .replace("$musicUrl", music.getUrl())
                 .replace("$hQMusicUrl", music.getUrl());
         return xml;

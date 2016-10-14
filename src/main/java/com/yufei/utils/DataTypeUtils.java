@@ -35,6 +35,6 @@ public abstract class DataTypeUtils {
     /**
      * 无查询结果时返回的文本消息
      */
-    public static final String TEXT_MESSAGE_CONTENT = "很抱歉，没有查询到您搜索的音乐，请更换关键词再试一下，关键词参考格式：\n1、歌名，如：仙剑问情\n2、歌名+空格+歌手，如：仙剑问情 萧人凤";
+    public static final String TEXT_MESSAGE_CONTENT = "很抱歉，没有查询到您搜索的音乐，请更换关键词再试一下，关键词参考格式：\n1、歌名，如：光辉岁月\n2、歌名+空格+歌手，如：光辉岁月 Beyond";
 
 }
