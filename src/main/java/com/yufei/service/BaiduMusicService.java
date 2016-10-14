@@ -86,12 +86,15 @@ public class BaiduMusicService {
                 logger.info("songInfo:" + songInfo);
 
                 json = JSONObject.parseObject(songInfo);
-                songLink = json.getString("songLink");
+                if (songLink == null) {
+                    songLink = json.getString("songLink");
+                }
                 // 优先选取艺术家相同的音乐
                 if (StringUtils.isNotBlank(artistName) && StringUtils.equals(artistName, json.getString("artistName"))) {
                     music = new Music();
                     music.setSongName(item.getSongname());
                     music.setArtistName(item.getArtistname());
+                    music.setUrl(this.dealSongLink(json.getString("songLink")));
                     break;
                 }
             }
@@ -102,21 +105,29 @@ public class BaiduMusicService {
                 music = new Music();
                 music.setSongName(baiduSong.getSongname());
                 music.setArtistName(baiduSong.getArtistname());
+                music.setUrl(this.dealSongLink(songLink));
             }
 
-            // 对返回的链接做处理
-            if (StringUtils.contains(songLink, "&src=")) {
-                songLink = songLink.substring(0, songLink.indexOf("&src="));
-            }
-            logger.info("songLink:" + songLink);
-
-            music.setUrl(songLink);
+            logger.info("songLink:" + music.getUrl());
             return music;
 
         } catch (Exception e) {
             logger.error("search error", e);
         }
         return null;
+    }
+
+    /**
+     * 对返回的链接做处理
+     *
+     * @param songLink
+     * @return
+     */
+    private String dealSongLink(String songLink) {
+        if (StringUtils.contains(songLink, "&src=")) {
+            songLink = songLink.substring(0, songLink.indexOf("&src="));
+        }
+        return songLink;
     }
 
 }

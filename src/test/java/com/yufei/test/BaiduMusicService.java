@@ -18,8 +18,6 @@ import java.util.List;
  */
 public class BaiduMusicService {
 
-    private static final Logger logger = Logger.getLogger(BaiduMusicService.class);
-
     /**
      * 根据歌名搜索音乐
      *
@@ -33,7 +31,7 @@ public class BaiduMusicService {
         try {
 
             if (StringUtils.isBlank(keyword)) {
-                logger.info("keyword is empty");
+                System.out.println("keyword is empty");
                 return null;
             }
 
@@ -84,12 +82,15 @@ public class BaiduMusicService {
                 System.out.println("songInfo:" + songInfo);
 
                 json = JSONObject.parseObject(songInfo);
-                songLink = json.getString("songLink");
+                if (songLink == null) {
+                    songLink = json.getString("songLink");
+                }
                 // 优先选取艺术家相同的音乐
                 if (StringUtils.isNotBlank(artistName) && StringUtils.equals(artistName, json.getString("artistName"))) {
                     music = new Music();
                     music.setSongName(item.getSongname());
                     music.setArtistName(item.getArtistname());
+                    music.setUrl(this.dealSongLink(json.getString("songLink")));
                     break;
                 }
             }
@@ -100,15 +101,10 @@ public class BaiduMusicService {
                 music = new Music();
                 music.setSongName(baiduSong.getSongname());
                 music.setArtistName(baiduSong.getArtistname());
+                music.setUrl(this.dealSongLink(songLink));
             }
 
-            // 对返回的链接做处理
-            if (StringUtils.contains(songLink, "&src=")) {
-                songLink = songLink.substring(0, songLink.indexOf("&src="));
-            }
-            System.out.println("songLink:" + songLink);
-
-            music.setUrl(songLink);
+            System.out.println("songLink:" + music.getUrl());
             return music;
 
         } catch (Exception e) {
@@ -117,11 +113,22 @@ public class BaiduMusicService {
         return null;
     }
 
+    /**
+     * 对返回的链接做处理
+     *
+     * @param songLink
+     * @return
+     */
+    private String dealSongLink(String songLink) {
+        if (StringUtils.contains(songLink, "&src=")) {
+            songLink = songLink.substring(0, songLink.indexOf("&src="));
+        }
+        return songLink;
+    }
+
     // test
     public static void main(String[] args) {
-        String keyword = "相信自己";
-        keyword = "光辉岁月 Beyond";
-        keyword = "最炫民族风 凤凰传奇";
+        String keyword = "光辉岁月 Beyond";
         Music music = new BaiduMusicService().searchMusic(keyword);
         System.out.println("音乐名称：" + music.getSongName());
         System.out.println("艺 术 家：" + music.getArtistName());
