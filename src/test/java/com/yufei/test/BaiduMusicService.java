@@ -3,16 +3,12 @@ package com.yufei.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yufei.model.Music;
-import com.yufei.model.Song;
+import com.yufei.model.BaiduSong;
+import com.yufei.utils.CommonUtils;
 import com.yufei.utils.DataTypeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.List;
@@ -53,7 +49,7 @@ public class BaiduMusicService {
             requestUrl = requestUrl.replace("{keyword}", URLEncoder.encode(keyword.replaceAll(" ", ""), DataTypeUtils.ENCODING_UTF8));
 
             // 音乐列表查询
-            String result = this.getInfo(requestUrl);
+            String result = CommonUtils.callHttpGetRequest(requestUrl);
             if (StringUtils.contains(result, "\"errno\":22001")) {
                 System.out.println("search failed");
                 return null;
@@ -65,7 +61,7 @@ public class BaiduMusicService {
             JSONObject json = null;
             json = JSONObject.parseObject(result);
             String songs = json.getString("song");
-            List<Song> list = JSON.parseArray(songs, Song.class);
+            List<BaiduSong> list = JSON.parseArray(songs, BaiduSong.class);
             if (list == null || list.isEmpty()) {
                 System.out.println("result is empty");
                 return null;
@@ -79,9 +75,9 @@ public class BaiduMusicService {
             String songLink = null;
             // 返回筛选后的音乐
             Music music = null;
-            for (Song item : list) {
+            for (BaiduSong item : list) {
                 // 根据歌曲id（songid）进行二次查询
-                musicInfo = this.getInfo(DataTypeUtils.BAIDU_MUSIC_API_DETAIL + item.getSongid());
+                musicInfo = CommonUtils.callHttpGetRequest(DataTypeUtils.BAIDU_MUSIC_API_DETAIL + item.getSongid());
                 json = JSONObject.parseObject(musicInfo);
                 // 结果是列表形式，取第一条（一般也只有一条）
                 songInfo = json.getJSONObject("data").getJSONArray("songList").get(0).toString();
@@ -100,10 +96,10 @@ public class BaiduMusicService {
 
             // 没有匹艺术家的音乐，则选列表中第一首
             if (music == null) {
-                Song song = list.get(0);
+                BaiduSong baiduSong = list.get(0);
                 music = new Music();
-                music.setSongName(song.getSongname());
-                music.setArtistName(song.getArtistname());
+                music.setSongName(baiduSong.getSongname());
+                music.setArtistName(baiduSong.getArtistname());
             }
 
             // 对返回的链接做处理
@@ -121,26 +117,6 @@ public class BaiduMusicService {
         return null;
     }
 
-    /**
-     * 请求网络接口
-     *
-     * @param requestUrl
-     * @return
-     */
-    private String getInfo(String requestUrl) {
-        String result = "";
-        try {
-            HttpGet request = new HttpGet(requestUrl);
-            HttpResponse response = HttpClients.createDefault().execute(request);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                result = EntityUtils.toString(response.getEntity());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     // test
     public static void main(String[] args) {
         String keyword = "相信自己";
@@ -154,7 +130,7 @@ public class BaiduMusicService {
 
 }
 
-// 返回的所有音乐信息
+// 音乐列表查询
 /*
 {
     "song": [
@@ -316,7 +292,7 @@ public class BaiduMusicService {
 }
 */
 
-// 根据歌曲id（songid）进行二次查询返回的信息
+// 音乐详情查询
 /*
 {
     "errorCode": 22000,

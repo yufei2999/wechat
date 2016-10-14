@@ -3,7 +3,7 @@ package com.yufei.model;
 /**
  * Created by pc on 2016-10-12.
  */
-public class Song {
+public class BaiduSong {
 
     private String bitrate_fee;
     private String yyr_artist;
