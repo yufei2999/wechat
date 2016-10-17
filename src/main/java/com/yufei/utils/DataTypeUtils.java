@@ -16,7 +16,6 @@ public abstract class DataTypeUtils {
      * 百度音乐搜索API 音乐列表
      */
     public static final String BAIDU_MUSIC_API_LIST = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=webapp_music&method=baidu.ting.search.catalogSug&format=xml&callback=&query={keyword}&_=";
-
     /**
      * 百度音乐搜索API 音乐详情
      */
@@ -26,7 +25,6 @@ public abstract class DataTypeUtils {
      * 酷狗音乐搜索API 音乐列表
      */
     public static final String KUGOU_MUSIC_API_LIST = "http://mobilecdn.kugou.com/api/v3/search/song?format=json&page=1&pagesize=10&showtype=1&keyword=";
-
     /**
      * 酷狗音乐搜索API 音乐详情
      */
@@ -36,5 +34,22 @@ public abstract class DataTypeUtils {
      * 无查询结果时返回的文本消息
      */
     public static final String TEXT_MESSAGE_CONTENT = "很抱歉，没有查询到您搜索的音乐，请更换关键词再试一下，关键词参考格式：\n1、歌名，如：光辉岁月\n2、歌名+空格+歌手，如：光辉岁月 Beyond";
+
+    /**
+     * 过滤掉的歌曲版本：伴奏
+     */
+    public static final String KEYWORD_SKIP_ACCOMPANIMENT = "伴奏";
+    /**
+     * 过滤掉的歌曲版本：铃声
+     */
+    public static final String KEYWORD_SKIP_BELL = "铃声";
+    /**
+     * 过滤掉的歌曲版本：DJ
+     */
+    public static final String KEYWORD_SKIP_DJ = "DJ";
+    /**
+     * 过滤掉的歌曲版本：纯音乐
+     */
+    public static final String KEYWORD_SKIP_MUSIC = "纯音乐";
 
 }
