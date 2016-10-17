@@ -102,7 +102,7 @@ public class KugouMusicServiceImpl implements MusicService {
                 music = new Music();
                 music.setSongName(song.getSongname());
                 music.setArtistName(song.getSingername());
-                music.setUrl(json.getString("url"));
+                music.setUrl(songLink);
             }
 
             return music;

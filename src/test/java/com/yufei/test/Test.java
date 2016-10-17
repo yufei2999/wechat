@@ -11,7 +11,7 @@ import com.yufei.service.impl.KugouMusicServiceImpl;
 public class Test {
 
     public static void main(String[] args) {
-        String keyword = "爱如星火 杨小曼";
+        String keyword = "花都开好了 s.h.e";
         // 先从百度搜索
         MusicService service = new BaiduMusicServiceImpl();
         Music music = service.searchMusic(keyword);
