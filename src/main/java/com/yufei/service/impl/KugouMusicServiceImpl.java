@@ -76,11 +76,18 @@ public class KugouMusicServiceImpl implements MusicService {
                 musicInfo = CommonUtils.callHttpGetRequest(DataTypeUtils.KUGOU_MUSIC_API_DETAIL + item.getHash());
                 json = JSONObject.parseObject(musicInfo);
                 logger.info("songInfo:" + json);
+                // 过滤处理
+                if (item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_ACCOMPANIMENT)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_BELL)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_DJ)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_MUSIC)) {
+                    continue;
+                }
                 if (songLink == null) {
                     songLink = json.getString("url");
                 }
                 // 优先选取艺术家相同的音乐
-                if (StringUtils.isNotBlank(artistName) && StringUtils.equals(artistName, item.getSingername())) {
+                if (StringUtils.isNotBlank(artistName) && StringUtils.contains(item.getSingername().toUpperCase(), artistName.toUpperCase())) {
                     music = new Music();
                     music.setSongName(item.getSongname());
                     music.setArtistName(item.getSingername());

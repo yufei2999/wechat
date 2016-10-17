@@ -91,7 +91,7 @@ public class BaiduMusicServiceImpl implements MusicService {
                     songLink = json.getString("songLink");
                 }
                 // 优先选取艺术家相同的音乐
-                if (StringUtils.isNotBlank(artistName) && StringUtils.equals(artistName, json.getString("artistName"))) {
+                if (StringUtils.isNotBlank(artistName) && StringUtils.contains(json.getString("artistName").toUpperCase(), artistName.toUpperCase())) {
                     music = new Music();
                     music.setSongName(item.getSongname());
                     music.setArtistName(item.getArtistname());
