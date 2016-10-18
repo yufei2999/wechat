@@ -65,8 +65,6 @@ public class KugouMusicServiceImpl implements MusicService {
 
             // 音乐详情查询（songid）
             String musicInfo = null;
-            // 返回具体的音乐信息
-            String songInfo = null;
             // 音乐链接地址
             String songLink = null;
             // 返回筛选后的音乐
@@ -86,6 +84,10 @@ public class KugouMusicServiceImpl implements MusicService {
                 }
                 if (songLink == null) {
                     songLink = json.getString("url");
+                }
+                // 如果关键词中不含歌手，直接跳出，之后取第一条结果
+                if (StringUtils.isBlank(artistName)) {
+                    break;
                 }
                 // 优先选取艺术家相同的音乐
                 if (StringUtils.isNotBlank(artistName) && StringUtils.contains(item.getSingername().toUpperCase(), artistName.toUpperCase())) {

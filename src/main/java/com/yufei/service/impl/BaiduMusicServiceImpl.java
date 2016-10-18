@@ -83,16 +83,27 @@ public class BaiduMusicServiceImpl implements MusicService {
                 musicInfo = CommonUtils.callHttpGetRequest(DataTypeUtils.BAIDU_MUSIC_API_DETAIL + item.getSongid());
                 json = JSONObject.parseObject(musicInfo);
                 logger.info("json:" + json.toString());
-                // 结果是列表形式，取第一条（一般也只有一条）
-                songInfo = json.getJSONObject("data").getJSONArray("songList").get(0).toString();
+
+                json = json.getJSONObject("data");
+                // songList下有数据再取，有时候可能网络超时等原因导致请求不到数据
+                if (json.get("songList").toString().length() > 2) {
+                    // 结果是列表形式，取第一条（一般也只有一条）
+                    songInfo = json.getJSONArray("songList").get(0).toString();
+                } else {
+                    continue;
+                }
                 logger.info("songInfo:" + songInfo);
 
                 json = JSONObject.parseObject(songInfo);
                 if (songLink == null) {
                     songLink = json.getString("songLink");
                 }
+                // 如果关键词中不含歌手，直接跳出，之后取第一条结果
+                if (StringUtils.isBlank(artistName)) {
+                    break;
+                }
                 // 优先选取艺术家相同的音乐
-                if (StringUtils.isNotBlank(artistName) && StringUtils.contains(json.getString("artistName").toUpperCase(), artistName.toUpperCase())) {
+                if (StringUtils.contains(json.getString("artistName").toUpperCase(), artistName.toUpperCase())) {
                     music = new Music();
                     music.setSongName(item.getSongname());
                     music.setArtistName(item.getArtistname());
