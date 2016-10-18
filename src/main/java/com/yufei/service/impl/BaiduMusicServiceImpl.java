@@ -58,7 +58,7 @@ public class BaiduMusicServiceImpl implements MusicService {
                 return null;
             }
             result = result.substring(1, result.length() - 2);
-            logger.info(result);
+            logger.info("result:" + result);
 
             // 获取歌曲信息列表
             JSONObject json = null;
