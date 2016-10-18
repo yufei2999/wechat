@@ -36,6 +36,7 @@ public class WechatProcess {
         String result = "";
         Music music = null;
         if ("text".endsWith(xmlEntity.getMsgType())) {
+            logger.info("keyword:" + xmlEntity.getContent());
             // 先从百度搜索
             MusicService service = new BaiduMusicServiceImpl();
             music = service.searchMusic(xmlEntity.getContent());
