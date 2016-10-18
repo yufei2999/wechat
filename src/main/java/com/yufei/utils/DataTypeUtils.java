@@ -51,5 +51,9 @@ public abstract class DataTypeUtils {
      * 过滤掉的歌曲版本：纯音乐
      */
     public static final String KEYWORD_SKIP_MUSIC = "纯音乐";
+    /**
+     * 过滤掉的歌曲版本：并四
+     */
+    public static final String KEYWORD_SKIP_FOUR = "并四";
 
 }

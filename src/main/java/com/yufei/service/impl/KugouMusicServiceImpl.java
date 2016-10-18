@@ -80,7 +80,8 @@ public class KugouMusicServiceImpl implements MusicService {
                 if (item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_ACCOMPANIMENT)
                         || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_BELL)
                         || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_DJ)
-                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_MUSIC)) {
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_MUSIC)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_FOUR)) {
                     continue;
                 }
                 if (songLink == null) {
