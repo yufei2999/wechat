@@ -113,7 +113,7 @@ public class BaiduMusicServiceImpl implements MusicService {
             }
 
             // 没有匹艺术家的音乐，则选列表中第一首
-            if (music == null) {
+            if (music == null && StringUtils.isNotBlank(songLink)) {
                 BaiduSong baiduSong = list.get(0);
                 music = new Music();
                 music.setSongName(baiduSong.getSongname());
@@ -121,7 +121,6 @@ public class BaiduMusicServiceImpl implements MusicService {
                 music.setUrl(this.dealSongLink(songLink));
             }
 
-            logger.info("songLink:" + music.getUrl());
             return music;
 
         } catch (Exception e) {

@@ -100,7 +100,7 @@ public class KugouMusicServiceImpl implements MusicService {
             }
 
             // 没有匹艺术家的音乐，则选列表中第一首
-            if (music == null) {
+            if (music == null && StringUtils.isNotBlank(songLink)) {
                 KugouSong song = list.get(0);
                 music = new Music();
                 music.setSongName(song.getSongname());
