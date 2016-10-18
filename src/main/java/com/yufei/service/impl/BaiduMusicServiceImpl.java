@@ -82,6 +82,7 @@ public class BaiduMusicServiceImpl implements MusicService {
                 // 根据歌曲id（songid）进行二次查询
                 musicInfo = CommonUtils.callHttpGetRequest(DataTypeUtils.BAIDU_MUSIC_API_DETAIL + item.getSongid());
                 json = JSONObject.parseObject(musicInfo);
+                logger.info("json:" + json.toString());
                 // 结果是列表形式，取第一条（一般也只有一条）
                 songInfo = json.getJSONObject("data").getJSONArray("songList").get(0).toString();
                 logger.info("songInfo:" + songInfo);
