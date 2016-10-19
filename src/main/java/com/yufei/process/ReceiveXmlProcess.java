@@ -23,20 +23,20 @@ public class ReceiveXmlProcess {
     /**
      * 解析微信xml消息
      *
-     * @param strXml
+     * @param receiveXml
      * @return
      */
-    public ReceiveXml getMsgEntity(String strXml) {
+    public ReceiveXml getMsgEntity(String receiveXml) {
 
         ReceiveXml msg = null;
         try {
-            if (StringUtils.isBlank(strXml)) {
-                logger.info("strXml is null");
+            if (StringUtils.isBlank(receiveXml)) {
+                logger.info("receive xml is null");
                 return null;
             }
 
             // 将字符串转化为XML文档对象  
-            Document document = DocumentHelper.parseText(strXml);
+            Document document = DocumentHelper.parseText(receiveXml);
             // 获得文档的根节点  
             Element root = document.getRootElement();
             // 遍历根节点下所有子节点  

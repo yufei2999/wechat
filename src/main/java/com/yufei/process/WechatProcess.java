@@ -32,10 +32,17 @@ public class WechatProcess {
             return null;
         }
 
+        FormatXmlProcess format = new FormatXmlProcess();
+
         // xml结果
         String result = "";
         Music music = null;
-        if ("text".endsWith(xmlEntity.getMsgType())) {
+        if (xmlEntity.getMsgType().equals(DataTypeUtils.WECHAT_MESSAGE_TYPE_EVENT)
+                && xmlEntity.getEvent().equals(DataTypeUtils.WECHAT_EVENT_TYPE_SUBSCRIBE)) {
+            // 关注事件回复消息
+            return format.formatXmlAnswer(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), DataTypeUtils.TEXT_MESSAGE_CONTENT);
+        } else if (xmlEntity.getMsgType().equals(DataTypeUtils.WECHAT_MESSAGE_TYPE_TEXT)) {
+            // 被动回复用户消息
             logger.info("keyword:" + xmlEntity.getContent());
             // 先从百度搜索
             MusicService service = new BaiduMusicServiceImpl();
@@ -48,7 +55,6 @@ public class WechatProcess {
         }
 
         // 返回消息
-        FormatXmlProcess format = new FormatXmlProcess();
         if (music == null) {
             // 文本消息
             result = format.formatXmlAnswer(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), DataTypeUtils.TEXT_MESSAGE_CONTENT);

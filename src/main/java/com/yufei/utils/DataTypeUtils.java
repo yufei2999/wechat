@@ -13,6 +13,19 @@ public abstract class DataTypeUtils {
     public static final String ENCODING_UTF8 = "UTF-8";
 
     /**
+     * 微信消息类型：文本 text
+     */
+    public static final String WECHAT_MESSAGE_TYPE_TEXT = "text";
+    /**
+     * 微信消息类型：事件 event
+     */
+    public static final String WECHAT_MESSAGE_TYPE_EVENT = "event";
+    /**
+     * 微信事件类型：关注
+     */
+    public static final String WECHAT_EVENT_TYPE_SUBSCRIBE = "subscribe";
+
+    /**
      * 百度音乐搜索API 音乐列表
      */
     public static final String BAIDU_MUSIC_API_LIST = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=webapp_music&method=baidu.ting.search.catalogSug&format=xml&callback=&query={keyword}&_=";
