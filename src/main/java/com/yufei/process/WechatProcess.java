@@ -40,7 +40,7 @@ public class WechatProcess {
         if (xmlEntity.getMsgType().equals(DataTypeUtils.WECHAT_MESSAGE_TYPE_EVENT)
                 && xmlEntity.getEvent().equals(DataTypeUtils.WECHAT_EVENT_TYPE_SUBSCRIBE)) {
             // 关注事件回复消息
-            return format.formatXmlAnswer(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), DataTypeUtils.TEXT_MESSAGE_CONTENT);
+            return format.formatXmlAnswer(xmlEntity.getFromUserName(), xmlEntity.getToUserName(), DataTypeUtils.TEXT_MESSAGE_SUBSCRIBE);
         } else if (xmlEntity.getMsgType().equals(DataTypeUtils.WECHAT_MESSAGE_TYPE_TEXT)) {
             // 被动回复用户消息
             logger.info("keyword:" + xmlEntity.getContent());

@@ -47,6 +47,10 @@ public abstract class DataTypeUtils {
      * 无查询结果时返回的文本消息
      */
     public static final String TEXT_MESSAGE_CONTENT = "很抱歉，没有查询到您搜索的音乐，请更换关键词再试一下，关键词参考格式：\n1、歌名，如：光辉岁月\n2、歌名+空格+歌手，如：光辉岁月 Beyond";
+    /**
+     * 关注公众号时返回的文本消息
+     */
+    public static final String TEXT_MESSAGE_SUBSCRIBE = "欢迎光临！\n在这里可以充分施展你的任性，尽情搜索你喜欢的歌曲，搜索方式：\n1、歌名，如：光辉岁月\n2、歌名+空格+歌手，如：光辉岁月 Beyond\n预祝玩得愉快！";
 
     /**
      * 过滤掉的歌曲版本：伴奏
