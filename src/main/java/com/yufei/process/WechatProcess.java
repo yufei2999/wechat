@@ -6,6 +6,7 @@ import com.yufei.model.ReceiveXml;
 import com.yufei.service.MusicService;
 import com.yufei.service.impl.BaiduMusicServiceImpl;
 import com.yufei.service.impl.KugouMusicServiceImpl;
+import com.yufei.service.impl.KuwoMusicServiceImpl;
 import com.yufei.utils.DataTypeUtils;
 import org.apache.log4j.Logger;
 
@@ -44,10 +45,14 @@ public class WechatProcess {
         } else if (xmlEntity.getMsgType().equals(DataTypeUtils.WECHAT_MESSAGE_TYPE_TEXT)) {
             // 被动回复用户消息
             logger.info("keyword:" + xmlEntity.getContent());
-            // 先从百度搜索
-            MusicService service = new BaiduMusicServiceImpl();
+            MusicService service = null;
+            // 百度搜索
+            /*service = new BaiduMusicServiceImpl();
+            music = service.searchMusic(xmlEntity.getContent());*/
+            // 酷我搜索
+            service = new KuwoMusicServiceImpl();
             music = service.searchMusic(xmlEntity.getContent());
-            // 如果百度没搜到，再从酷狗搜
+            // 酷狗搜索
             if (music == null) {
                 service = new KugouMusicServiceImpl();
                 music = service.searchMusic(xmlEntity.getContent());
