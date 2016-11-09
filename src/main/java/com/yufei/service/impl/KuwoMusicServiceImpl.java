@@ -72,7 +72,7 @@ public class KuwoMusicServiceImpl implements MusicService {
                 }
                 // 根据歌曲rid（MUSICRID）进行二次查询
                 songLink = CommonUtils.callHttpGetRequest(DataTypeUtils.KUWO_MUSIC_API_DETAIL + item.getMUSICRID());
-                if (StringUtils.isBlank(songLink)) {
+                if (StringUtils.isBlank(songLink) || songLink.equals("res not found")) {
                     continue;
                 }
                 if (StringUtils.isBlank(artistName)) {
