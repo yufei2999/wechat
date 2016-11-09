@@ -44,6 +44,15 @@ public abstract class DataTypeUtils {
     public static final String KUGOU_MUSIC_API_DETAIL = "http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=";
 
     /**
+     * 酷我音乐搜索API 音乐列表
+     */
+    public static final String KUWO_MUSIC_API_LIST = "http://search.kuwo.cn/r.s?ft=music&itemset=web_2013&client=kt&pn=0&rn=5&rformat=json&encoding=utf8&all=";
+    /**
+     * 酷我音乐搜索API 音乐详情（只有链接地址）
+     */
+    public static final String KUWO_MUSIC_API_DETAIL = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=aac%7Cmp3&response=url&rid=";
+
+    /**
      * 无查询结果时返回的文本消息
      */
     public static final String TEXT_MESSAGE_CONTENT = "很抱歉，没有查询到您搜索的音乐，请更换关键词再试一下，关键词参考格式：\n1、歌名，如：光辉岁月\n2、歌名+空格+歌手，如：光辉岁月 Beyond";
