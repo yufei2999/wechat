@@ -50,11 +50,13 @@ public class WechatProcess {
             /*service = new BaiduMusicServiceImpl();
             music = service.searchMusic(xmlEntity.getContent());*/
             // 酷我搜索
-            /*service = new KuwoMusicServiceImpl();
-            music = service.searchMusic(xmlEntity.getContent());*/
-            // 酷狗搜索
-            service = new KugouMusicServiceImpl();
+            service = new KuwoMusicServiceImpl();
             music = service.searchMusic(xmlEntity.getContent());
+            // 酷狗搜索
+            if (music == null) {
+                service = new KugouMusicServiceImpl();
+                music = service.searchMusic(xmlEntity.getContent());
+            }
         }
 
         // 返回消息
