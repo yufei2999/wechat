@@ -50,7 +50,7 @@ public abstract class DataTypeUtils {
     /**
      * 酷我音乐搜索API 音乐详情（只有链接地址）
      */
-    public static final String KUWO_MUSIC_API_DETAIL = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=aac%7Cmp3&response=url&rid=";
+    public static final String KUWO_MUSIC_API_DETAIL = "http://antiserver.kuwo.cn/anti.s?type=convert_url&format=mp3&response=url&rid=";
 
     /**
      * 无查询结果时返回的文本消息
