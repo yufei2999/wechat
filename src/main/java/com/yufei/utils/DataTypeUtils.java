@@ -6,11 +6,20 @@ package com.yufei.utils;
  * Created by pc on 2016-10-12.
  */
 public abstract class DataTypeUtils {
-    
+
     /**
      * 编码格式  UTF-8
      */
     public static final String ENCODING_UTF8 = "UTF-8";
+    /**
+     * 编码格式  UTF-8
+     */
+    public static final String ENCODING_ISO_8859_1 = "ISO-8859-1";
+
+    /**
+     * 编码格式  UTF-8
+     */
+    public static final String SERVICE_URL = "http://yufei2999.eax3kxwbch.us-west-2.elasticbeanstalk.com/";
 
     /**
      * 微信消息类型：文本 text

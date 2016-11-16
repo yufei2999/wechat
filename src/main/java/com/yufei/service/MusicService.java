@@ -2,6 +2,8 @@ package com.yufei.service;
 
 import com.yufei.model.Music;
 
+import java.util.List;
+
 /**
  * 音乐搜索接口
  *
@@ -18,5 +20,13 @@ public interface MusicService {
      * @return
      */
     Music searchMusic(String keyword);
+
+    /**
+     * 音乐列表
+     *
+     * @param keyword
+     * @return
+     */
+    List<Music> getMusicList(String keyword);
 
 }

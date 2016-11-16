@@ -10,7 +10,9 @@ import com.yufei.utils.DataTypeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -120,4 +122,54 @@ public class KuwoMusicServiceImpl implements MusicService {
         return music;
     }
 
+    public List<Music> getMusicList(String keyword) {
+
+        try {
+            if (StringUtils.isBlank(keyword)) {
+                logger.info("keyword is empty");
+                return null;
+            }
+            // 酷我音乐搜索API 音乐列表
+            String requestUrl = DataTypeUtils.KUWO_MUSIC_API_LIST + URLEncoder.encode(keyword, DataTypeUtils.ENCODING_UTF8);
+
+            // 音乐列表查询
+            String result = CommonUtils.callHttpGetRequest(requestUrl);
+            logger.info("result:" + result);
+
+            // 获取歌曲信息列表
+            JSONObject json = null;
+            json = JSONObject.parseObject(result);
+            String songs = json.getString("abslist");
+            List<KuwoSong> list = JSON.parseArray(songs, KuwoSong.class);
+            if (list == null || list.isEmpty()) {
+                logger.info("result is empty");
+                return null;
+            }
+
+            // 音乐列表
+            List<Music> musicList = new ArrayList<>();
+            // 音乐链接地址
+            String songLink;
+            for (KuwoSong item : list) {
+                // 过滤处理
+                if (item.getSONGNAME().contains(DataTypeUtils.KEYWORD_SKIP_ACCOMPANIMENT)
+                        || item.getSONGNAME().contains(DataTypeUtils.KEYWORD_SKIP_BELL)
+                        || item.getSONGNAME().contains(DataTypeUtils.KEYWORD_SKIP_DJ)
+                        || item.getSONGNAME().contains(DataTypeUtils.KEYWORD_SKIP_MUSIC)
+                        || item.getSONGNAME().contains(DataTypeUtils.KEYWORD_SKIP_FOUR)) {
+                    continue;
+                }
+                // 根据歌曲rid（MUSICRID）进行二次查询
+                songLink = CommonUtils.callHttpGetRequest(DataTypeUtils.KUWO_MUSIC_API_DETAIL + item.getMUSICRID());
+                if (StringUtils.isBlank(songLink) || songLink.equals("res not found")) {
+                    continue;
+                }
+                musicList.add(this.getMusic(item, songLink));
+            }
+            return musicList;
+        } catch (UnsupportedEncodingException e) {
+            logger.error("get music list error in kuwo", e);
+        }
+        return null;
+    }
 }

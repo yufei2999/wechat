@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -135,4 +136,63 @@ public class KugouMusicServiceImpl implements MusicService {
         return music;
     }
 
+    public List<Music> getMusicList(String keyword) {
+
+        try {
+
+            if (StringUtils.isBlank(keyword)) {
+                logger.info("keyword is empty");
+                return null;
+            }
+            // 酷狗音乐搜索API 音乐列表
+            String requestUrl = DataTypeUtils.KUGOU_MUSIC_API_LIST + URLEncoder.encode(keyword, DataTypeUtils.ENCODING_UTF8);
+
+            // 音乐列表查询
+            String result = CommonUtils.callHttpGetRequest(requestUrl);
+            logger.info("result:" + result);
+
+            // 获取歌曲信息列表
+            JSONObject json = null;
+            json = JSONObject.parseObject(result);
+            String songs = json.getJSONObject("data").getString("info");
+            List<KugouSong> list = JSON.parseArray(songs, KugouSong.class);
+            if (list == null || list.isEmpty()) {
+                logger.info("result is empty");
+                return null;
+            }
+
+            // 音乐列表
+            List<Music> musicList = new ArrayList<>();
+            // 音乐详情查询（songid）
+            String musicInfo;
+            // 音乐链接地址
+            String songLink;
+            for (KugouSong item : list) {
+                // 过滤处理
+                if (item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_ACCOMPANIMENT)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_BELL)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_DJ)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_MUSIC)
+                        || item.getFilename().contains(DataTypeUtils.KEYWORD_SKIP_FOUR)) {
+                    continue;
+                }
+                // 根据歌曲id（songid）进行二次查询
+                musicInfo = CommonUtils.callHttpGetRequest(DataTypeUtils.KUGOU_MUSIC_API_DETAIL + item.getHash());
+                json = JSONObject.parseObject(musicInfo);
+                if (json == null) {
+                    continue;
+                }
+                logger.info("songInfo:" + json);
+                songLink = json.getString("url");
+                if (StringUtils.isBlank(songLink)) {
+                    continue;
+                }
+                musicList.add(this.getMusic(item, songLink));
+            }
+            return musicList;
+        } catch (Exception e) {
+            logger.error("get music list error in kugou", e);
+        }
+        return null;
+    }
 }

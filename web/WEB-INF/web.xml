@@ -23,6 +23,26 @@
         <servlet-name>wechat</servlet-name>
         <url-pattern>/wechat</url-pattern>
     </servlet-mapping>
+    
+    <!-- web music -->
+    <servlet>
+        <servlet-name>web music</servlet-name>
+        <servlet-class>com.yufei.servlet.MusicServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>web music</servlet-name>
+        <url-pattern>/music</url-pattern>
+    </servlet-mapping>
+
+    <!-- web music -->
+    <servlet>
+        <servlet-name>wechat music</servlet-name>
+        <servlet-class>com.yufei.servlet.WechatMusicServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>wechat music</servlet-name>
+        <url-pattern>/wechatMusic</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>

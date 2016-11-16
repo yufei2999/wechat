@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -75,10 +76,6 @@ public class BaiduMusicServiceImpl implements MusicService {
             Music musicTemp = null;
             // 音乐链接地址
             String songLink = null;
-            // 音乐详情查询（songid）
-            String musicInfo = null;
-            // 返回具体的音乐信息
-            String songInfo = null;
             for (BaiduSong item : list) {
                 json = this.getSongInfoJson(item.getSongid());
                 if (json == null) {
@@ -171,4 +168,57 @@ public class BaiduMusicServiceImpl implements MusicService {
         return songLink;
     }
 
+    public List<Music> getMusicList(String keyword) {
+
+        try {
+
+            if (StringUtils.isBlank(keyword)) {
+                logger.info("keyword is empty");
+                return null;
+            }
+            // 百度音乐搜索API 音乐列表
+            String requestUrl = DataTypeUtils.BAIDU_MUSIC_API_LIST + Calendar.getInstance().getTimeInMillis();
+            // 关键词转码
+            requestUrl = requestUrl.replace("{keyword}", URLEncoder.encode(keyword.replaceAll(" ", ""), DataTypeUtils.ENCODING_UTF8));
+
+            // 音乐列表查询
+            String result = CommonUtils.callHttpGetRequest(requestUrl);
+            if (StringUtils.contains(result, "\"errno\":22001")) {
+                logger.info("search failed");
+                return null;
+            }
+            result = result.substring(1, result.length() - 2);
+            logger.info("result:" + result);
+
+            // 获取歌曲信息列表
+            JSONObject json = null;
+            json = JSONObject.parseObject(result);
+            String songs = json.getString("song");
+            List<BaiduSong> list = JSON.parseArray(songs, BaiduSong.class);
+            if (list == null || list.isEmpty()) {
+                logger.info("result is empty");
+                return null;
+            }
+
+            // 音乐列表
+            List<Music> musicList = new ArrayList<>();
+            // 音乐链接地址
+            String songLink;
+            for (BaiduSong item : list) {
+                json = this.getSongInfoJson(item.getSongid());
+                if (json == null) {
+                    continue;
+                }
+                songLink = this.dealSongLink(json.getString("songLink"));
+                if (StringUtils.isBlank(songLink)) {
+                    continue;
+                }
+                musicList.add(this.getMusic(item, songLink));
+            }
+            return musicList;
+        } catch (Exception e) {
+            logger.error("search error", e);
+        }
+        return null;
+    }
 }
