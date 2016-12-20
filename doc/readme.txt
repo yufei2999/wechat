@@ -5,6 +5,9 @@ http://127.0.0.1:8080/wechat/wechatVerify?signature=bf26b41cf030acb91a0423fe752d
 http://127.0.0.1:8080/wechat/wechat?signature=bf26b41cf030acb91a0423fe752d57e617823252&timestamp=timestamp&nonce=nonce&echostr=yufei
 http://127.0.0.1:8080/wechat/wechat?signature=bf26b41cf030acb91a0423fe752d57e617823252&timestamp=timestamp&nonce=nonce
 
+网页版（rt即request type：l为list，其他为detail）
+http://127.0.0.1:8080/wechat/music?rt=l&keyword=sweety
+http://127.0.0.1:8080/wechat/music?rt=l&keyword=风中有朵雨做的云
 
 搜索结果（json）
 -----------------------------------------------
